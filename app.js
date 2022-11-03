@@ -8,7 +8,7 @@ const PORT = 80
 
 //create account table
 db.prepare("CREATE TABLE IF NOT EXISTS account (id INTEGER PRIMARY KEY AUTOINCREMENT, acc_name TEXT, balance NUMERIC, last_use INTEGER, usage NUMERIC, income NUMERIC)").run()
-db.prepare("CREATE TABLE IF NOT EXISTS balance (id INTEGER PRIMARY KEY AUTOINCREMENT, acc_id INTEGER, cat_id INTEGER, flow INTEGER, amount NUMERIC, datetime TEXT)").run()
+db.prepare("CREATE TABLE IF NOT EXISTS balance (id INTEGER PRIMARY KEY AUTOINCREMENT, acc_id INTEGER, cat_id INTEGER, flow INTEGER, amount NUMERIC, datetime TEXT, note TEXT)").run()
 db.prepare("CREATE TABLE IF NOT EXISTS kategori (id INTEGER PRIMARY KEY AUTOINCREMENT, cat_parent INTEGER, cat_name TEXT)").run()
 
 const db_check1 = db.prepare("SELECT COUNT(*) FROM account").get()
@@ -99,7 +99,7 @@ io.on("connection", socket => {
         let datenow = new Date
         let gettime = datenow.getTime()
         const acc = db.prepare("SELECT * FROM account WHERE last_use = ?").get("1")
-        db.prepare("INSERT INTO balance (acc_id, cat_id, flow, amount, datetime) VALUES (?, ?, ?, ?, ?)").run(acc["id"], data.subcat, data.type, Number(data.val).toFixed(2), gettime)
+        db.prepare("INSERT INTO balance (acc_id, cat_id, flow, amount, datetime, note) VALUES (?, ?, ?, ?, ?, ?)").run(acc["id"], data.subcat, data.type, Number(data.val).toFixed(2), gettime, data.note)
         let newbal = acc["balance"]
         let newusage = acc["usage"]
         let newincome = acc["income"]

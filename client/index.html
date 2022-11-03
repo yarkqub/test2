@@ -406,7 +406,7 @@
                 if (rec_val.value && rec_val.value > 0) {
                     if (rec_cat.value && rec_cat.value != "0") {
                         if (rec_subcat.value && rec_subcat.value != "0") {
-                            socket.emit("record", { type: rec_type, cat: rec_cat.value, subcat: rec_subcat.value, val: rec_val.value })
+                            socket.emit("record", { type: rec_type, cat: rec_cat.value, subcat: rec_subcat.value, val: rec_val.value, note: rec_note.value })
                         }
                         else {
                             alert("Require sub-category")
