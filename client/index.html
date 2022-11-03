@@ -179,6 +179,10 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #535353;
         }
+
+        .small {
+            font-size: .75rem;
+        }
     </style>
 </head>
 
@@ -224,7 +228,7 @@
     <div class="card" style="border-bottom-left-radius: 0px; border-bottom-right-radius: 0px;">
         <h2>Wallet</h2>
         <hr>
-        <p>&copy; Wallet 2021. Made with ❤ by Akob @ zetta-hotel.com | 💎Version 1.3</p>
+        <p>&copy; Wallet 2021. Made with ❤ by Akob @ zetta-hotel.com | 💎Version 1.4</p>
     </div>
 
     <div id="man_cat_modal" class="modal">
@@ -276,10 +280,12 @@
             <br>
             Category: <br>
             <select name="category" id="erec_cat" class="input category_list"></select>
-            <select class="input sub_cat" name="" id="erec_subcat"></select>
+            <select class="input sub_cat" id="erec_subcat"></select>
             <br>
             RM <input id="erec_val" class="input" type="number" step="0.01">
             <br>
+            Note: <br>
+            <textarea id="erec_note" class="input"></textarea>
             <button id="save_rec" class="button blue">Save</button>
         </div>
     </div>
@@ -461,7 +467,7 @@
                 edit_rec_modal.style.display = "none"
                 if (erec_subcat.value && erec_subcat.value != "0") {
                     if (erec_val.value && erec_val.value != "0") {
-                        socket.emit("save_rec", { id: edit_id, type: erec_type, cat: erec_subcat.value, val: erec_val.value })
+                        socket.emit("save_rec", { id: edit_id, type: erec_type, cat: erec_subcat.value, val: erec_val.value, note: erec_note.value })
                     }
                 }
             })
@@ -560,6 +566,7 @@
                     let cat = data.cat.find(cat => cat["id"] == subcat["cat_parent"])
                     rec_list.insertAdjacentHTML("beforeend", `<div>${date + "/" + month + "/" + year + " " + hour + ":" + minute}  <button class="recdata btn blue" data-id="${rec["id"]}">🖋 Edit</button>  <button class="delrec btn red" data-id="${rec["id"]}">🗑 Delete</button><br>
                     ${cat["cat_name"]} -&gt; ${subcat["cat_name"]}<br>
+                    <span class="small">${rec["note"] ? "Note: " + rec["note"] + "<br>" : ""}</span>
                         ${type} RM ${rec["amount"].toFixed(2)} </span>
                         </div>
                     <hr>`)
@@ -615,6 +622,7 @@
                 erec_cat.innerHTML = `<option value="${getcat.id}">${getcat.cat_name}</option>`
                 erec_subcat.innerHTML = `<option value="${getsubcat.id}">${getsubcat.cat_name}</option>`
                 erec_val.value = data.rec.amount
+                erec_note.value = data.rec.note
                 data.cat.forEach(cat => {
                     if (cat.cat_parent == "0") {
                         if (cat.id != getcat.id) {

@@ -163,7 +163,7 @@ io.on("connection", socket => {
             new_bal += Number(data.val)
         }
         db.prepare("UPDATE account SET balance = ? WHERE id = ?").run(new_bal.toFixed(2), get_rec["acc_id"])
-        db.prepare("UPDATE balance SET amount = ?, flow = ?, cat_id = ? WHERE id = ?").run(Number(data.val).toFixed(2), data.type, data.cat, data.id)
+        db.prepare("UPDATE balance SET amount = ?, flow = ?, cat_id = ?, note = ? WHERE id = ?").run(Number(data.val).toFixed(2), data.type, data.cat, data.note, data.id)
         use_account()
     })
     socket.on("delrec", data=>{
